@@ -13,22 +13,23 @@ class ConfigSource:
 
 
 class FileConfigSource(ConfigSource):
-    CONFIG_FILENAME = "config.json"
-    CALIBRATION_FILENAME = "calibration.json"
+    # CONFIG_FILENAME = "config.json"
+    # CALIBRATION_FILENAME = "calibration.json"
 
-    def __init__(self) -> None:
-        pass
+    def __init__(self, config_fn: str, calibration_fn: str) -> None:
+        self.config_fn = config_fn
+        self.calibration_fn = calibration_fn
 
     def update(self, config_store: ConfigStore) -> None:
         # Get config
-        with open(self.CONFIG_FILENAME, "r") as config_file:
+        with open(self.config_fn, "r") as config_file:
             config_data = json.loads(config_file.read())
             config_store.local_config.device_id = config_data["device_id"]
             config_store.local_config.server_ip = config_data["server_ip"]
             config_store.local_config.stream_port = config_data["stream_port"]
 
         # Get calibration
-        calibration_store = cv2.FileStorage(self.CALIBRATION_FILENAME, cv2.FILE_STORAGE_READ)
+        calibration_store = cv2.FileStorage(self.calibration_fn, cv2.FILE_STORAGE_READ)
         camera_matrix = calibration_store.getNode("camera_matrix").mat()
         distortion_coefficients = calibration_store.getNode("distortion_coefficients").mat()
         calibration_store.release()

@@ -21,6 +21,13 @@ from pipeline.PoseEstimator import SquareTargetPoseEstimator
 DEMO_ID = 29
 
 if __name__ == "__main__":
+    
+    config_fn = "/opt/northstar/config1.json"
+    calibration_fn = "/opt/northstar/calibration1.json"
+    if len(sys.argv) >= 3:
+        config_fn = sys.argv[1]
+        calibration_fn = sys.argv[2]
+
     config = ConfigStore(LocalConfig(), RemoteConfig())
     local_config_source: ConfigSource = FileConfigSource()
     remote_config_source: ConfigSource = NTConfigSource()

@@ -13,11 +13,12 @@ class CalibrationSession:
     _all_charuco_ids: List[numpy.ndarray] = []
     _imsize = None
 
-    def __init__(self) -> None:
+    def __init__(self, calibration_fn: str) -> None:
         self._aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_5X5_1000)
         self._aruco_params = cv2.aruco.DetectorParameters_create()
         self._charuco_board = cv2.aruco.CharucoBoard_create(
             12, 9, 0.030, 0.023, self._aruco_dict)
+        self.calibration_fn = calibration_fn
 
     def process_frame(self, image: cv2.Mat, save: bool) -> None:
         # Get image size
@@ -46,8 +47,8 @@ class CalibrationSession:
             print("ERROR: No calibration data")
             return
 
-        if os.path.exists(FileConfigSource.CALIBRATION_FILENAME):
-            os.remove(FileConfigSource.CALIBRATION_FILENAME)
+        if os.path.exists(self.calibration_fn):
+            os.remove(calibration_fn)
 
         (retval, camera_matrix, distortion_coefficients, rvecs, tvecs) = cv2.aruco.calibrateCameraCharuco(
             self._all_charuco_corners, self._all_charuco_ids, self._charuco_board, self._imsize, None, None)
