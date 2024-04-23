@@ -29,7 +29,7 @@ if __name__ == "__main__":
         calibration_fn = sys.argv[2]
 
     config = ConfigStore(LocalConfig(), RemoteConfig())
-    local_config_source: ConfigSource = FileConfigSource()
+    local_config_source: ConfigSource = FileConfigSource(config_fn, calibration_fn)
     remote_config_source: ConfigSource = NTConfigSource()
     calibration_command_source: CalibrationCommandSource = NTCalibrationCommandSource()
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     tag_pose_estimator = SquareTargetPoseEstimator()
     output_publisher: OutputPublisher = NTOutputPublisher()
     stream_server = MjpegServer()
-    calibration_session = CalibrationSession()
+    calibration_session = CalibrationSession(calibration_fn)
 
     local_config_source.update(config)
     ntcore.NetworkTableInstance.getDefault().setServer(config.local_config.server_ip)
